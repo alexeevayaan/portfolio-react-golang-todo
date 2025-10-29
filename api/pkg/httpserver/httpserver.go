@@ -51,7 +51,6 @@ func (s *Server) Close(){
 	defer cancel()
 
 	err:= s.server.Shutdown(ctx)
-
 	if err !=nil{
 		log.Error().Msg("http server: s.server.Shutdown")
 	}

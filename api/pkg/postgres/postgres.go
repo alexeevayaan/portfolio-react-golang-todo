@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
 )
 
 type Config struct{
@@ -36,4 +37,5 @@ func New(ctx context.Context, c Config) (*Pool, error){
 
 func (p *Pool) Close(){
 	p.Pool.Close()
+	log.Info().Msg("Postgres closed")
 }
