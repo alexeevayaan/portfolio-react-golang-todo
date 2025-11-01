@@ -33,13 +33,13 @@ services:
     image: redis:alpine
     ports:
       - "6379:6379"
-  redis-ui:
-    image: rediscommander/redis-commander
-    platform: linux/amd64
-    ports:
-      - "8081:8081"
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-    depends_on:
-      - redis
+  # redis-ui:
+  #   image: rediscommander/redis-commander
+  #   platform: linux/amd64
+  #   ports:
+  #     - "8081:8081"
+  #   environment:
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #   depends_on:
+  #     - redis
