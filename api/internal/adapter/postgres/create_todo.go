@@ -7,7 +7,7 @@ import (
 )
 
 func (p *Postgres) CreateTodo(ctx context.Context, todo domain.Todo) error{
-	const sql = `INSERT INTO profile (id, title, description, completed)
+	const sql = `INSERT INTO todo (id, title, description, completed)
 					VALUES ($1, $2, $3, $4)`
 
 					return nil

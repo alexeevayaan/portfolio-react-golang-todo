@@ -1,4 +1,4 @@
-package todo
+package usecase
 
 import (
 	"context"
@@ -14,13 +14,13 @@ type Postgres interface {
 	CreateTodo(ctx context.Context, todo domain.Todo) error
 }
 
-type UseCaseTodo struct{
+type UseCase struct{
 	postgres Postgres
 	redis Redis
 }
 
-func New(postgres Postgres, redis Redis) *UseCaseTodo{
-	return &UseCaseTodo{
+func New(postgres Postgres, redis Redis) *UseCase{
+	return &UseCase{
 		postgres: postgres,
 		redis: redis,
 	}

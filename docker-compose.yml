@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   #  front:
   #    build:
@@ -37,6 +35,7 @@ services:
       - "6379:6379"
   redis-ui:
     image: rediscommander/redis-commander
+    platform: linux/amd64
     ports:
       - "8081:8081"
     environment:

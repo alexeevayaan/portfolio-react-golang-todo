@@ -1,12 +1,12 @@
 package v1
 
-import "github.com/alexeevayaan/portfolio-react-golang-todo/api/internal/usecase/todo"
+import todo "github.com/alexeevayaan/portfolio-react-golang-todo/api/internal/usecase"
 
 type Handler struct{
-	usecase *todo.UseCaseTodo
+	usecase *todo.UseCase
 }
 
-func New(uc *todo.UseCaseTodo) *Handler{
+func New(uc *todo.UseCase) *Handler{
 	return &Handler{
 		usecase: uc,
 	}
