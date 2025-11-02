@@ -13,6 +13,7 @@ func Router(r *chi.Mux, uc * todo.UseCase){
 	r.Route("/", func(r chi.Router) {
 		r.Route("/v1", func(r chi.Router) {
 			r.Post("/todo", v1.CreateTodo)
+			r.Get("/todo/{id}", v1.GetTodo)
 		})
 	})
 }

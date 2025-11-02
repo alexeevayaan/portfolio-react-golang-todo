@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/internal/domain"
+	"github.com/google/uuid"
 )
 
 type Redis interface{
@@ -12,6 +13,7 @@ type Redis interface{
 
 type Postgres interface {
 	CreateTodo(ctx context.Context, todo domain.Todo) error
+	GetTodo(ctx context.Context, id uuid.UUID) (domain.Todo, error)
 }
 
 type UseCase struct{
