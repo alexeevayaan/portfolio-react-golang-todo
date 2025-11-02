@@ -14,6 +14,8 @@ func Router(r *chi.Mux, uc * todo.UseCase){
 		r.Route("/v1", func(r chi.Router) {
 			r.Post("/todo", v1.CreateTodo)
 			r.Get("/todo/{id}", v1.GetTodo)
+			r.Delete("/todo{id}", v1.DeleteTodo)			
+
 		})
 	})
 }

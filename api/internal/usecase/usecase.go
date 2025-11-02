@@ -14,6 +14,7 @@ type Redis interface{
 type Postgres interface {
 	CreateTodo(ctx context.Context, todo domain.Todo) error
 	GetTodo(ctx context.Context, id uuid.UUID) (domain.Todo, error)
+	DeleteTodo(ctx context.Context, id uuid.UUID) error
 }
 
 type UseCase struct{
