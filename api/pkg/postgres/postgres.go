@@ -21,7 +21,8 @@ type Pool struct{
 }
 
 func New(ctx context.Context, c Config) (*Pool, error){
-	dsn:=fmt.Sprintf("user=%s password=%s port=%s host=%s dbname=$%s", c.User,c.Password,c.Port,c.Host,c.DBName)
+	dsn:=fmt.Sprintf("user=%s password=%s port=%s host=%s dbname=%s", c.User,c.Password,c.Port,c.Host,c.DBName)
+	fmt.Println(dsn)
 
 	cfg,err:=pgxpool.ParseConfig(dsn)
 	if err !=nil{

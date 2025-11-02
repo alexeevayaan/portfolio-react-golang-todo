@@ -24,3 +24,9 @@ migrate-up:
 
 migrate-down:
 	migrate -database "$(DB_MIGRATE_URL)" -path "$(MIGRATE_PATH)" down -all
+
+migrate-drop:
+	migrate -database "$(DB_MIGRATE_URL)" -path "$(MIGRATE_PATH)" drop
+
+migrate-version:
+	migrate -database "$(DB_MIGRATE_URL)" -path "$(MIGRATE_PATH)" version
