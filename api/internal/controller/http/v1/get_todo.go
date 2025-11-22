@@ -10,8 +10,7 @@ import (
 	"github.com/go-chi/chi/v5"
 )
 
-
-func (h *Handler) GetTodo(w http.ResponseWriter, r *http.Request){
+func (h *Handler) GetTodo(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 
 	input := dto.GetTodoInput{
@@ -19,13 +18,14 @@ func (h *Handler) GetTodo(w http.ResponseWriter, r *http.Request){
 	}
 
 	output, err := h.usecase.GetTodo(ctx, input)
-	if err != nil{
+	if err != nil {
 		ErrStatus := http.StatusBadRequest
-		if errors.Is(err, domain.ErrNotFound){
+		if errors.Is(err, domain.ErrNotFound) {
 			ErrStatus = http.StatusNotFound
 		}
 		render.Error(ctx, w, err, ErrStatus, "request failed")
+		return
 	}
 
 	render.JSON(w, output, http.StatusOK)
-} 
+}

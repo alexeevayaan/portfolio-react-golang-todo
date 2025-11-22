@@ -30,3 +30,6 @@ migrate-drop:
 
 migrate-version:
 	migrate -database "$(DB_MIGRATE_URL)" -path "$(MIGRATE_PATH)" version
+
+integration-test:
+	cd api && go test -count=1 -v -tags=integration ./test/integration
