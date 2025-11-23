@@ -33,3 +33,6 @@ migrate-version:
 
 integration-test:
 	cd api && go test -count=1 -v -tags=integration ./test/integration
+
+oapi-install:
+	go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest	
