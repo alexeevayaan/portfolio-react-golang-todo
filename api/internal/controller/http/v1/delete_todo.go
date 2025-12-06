@@ -1,26 +1,23 @@
 package v1
 
 import (
-	"net/http"
+	"context"
 
+	http_server "github.com/alexeevayaan/portfolio-react-golang-todo/api/gen/http/todo_v1/server"
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/internal/dto"
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/pkg/render"
-	"github.com/go-chi/chi/v5"
 )
 
-
-func (h *Handler) DeleteTodo(w http.ResponseWriter, r *http.Request){
-	ctx := r.Context()
-
+func (h *Handler) DeleteTodoByID(ctx context.Context, request http_server.DeleteTodoByIDRequestObject) (http_server.DeleteTodoByIDResponseObject, error) {
 	input := dto.DeleteTodoInput{
-		Id: chi.URLParam(r, "id"),
+		Id: request.ID.String(),
 	}
 
 	err := h.usecase.DeleteTodo(ctx, input)
-	if err != nil{
-		render.Error(ctx, w, err, http.StatusBadRequest, "request failed")
-		return
+	if err != nil {
+		err = render.Error(ctx, err, "request failed")
+		return http_server.DeleteTodoByID400JSONResponse{Error: err.Error()}, nil
 	}
 
-	w.WriteHeader(http.StatusNoContent)
+	return http_server.DeleteTodoByID204Response{}, nil
 }

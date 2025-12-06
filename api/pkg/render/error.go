@@ -4,17 +4,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
+
+	"github.com/alexeevayaan/portfolio-react-golang-todo/api/pkg/logger"
 )
 
-type errstr struct{
-	Error string `json:"error"`
-}
+func Error(ctx context.Context, err error, message string) error {
+	ctxError, ok := ctx.Value(logger.ContextErrKey{}).(*error)
+	if !ok {
+		*ctxError = fmt.Errorf("%s: %w", message, err)
+	}
 
-func Error(ctx context.Context, w http.ResponseWriter, err error, status int, message string) {
 	err = unpack(err)
-	err = fmt.Errorf("%s: %w", message, err)
-	JSON(w, errstr{Error: err.Error()}, status)
+
+	return fmt.Errorf("%s: %w", message, err)
 }
 
 func unpack(err error) error {
@@ -25,5 +27,6 @@ func unpack(err error) error {
 		}
 		err = e
 	}
+
 	return err
 }

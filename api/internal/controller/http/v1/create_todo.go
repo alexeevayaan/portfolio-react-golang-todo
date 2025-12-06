@@ -1,31 +1,29 @@
 package v1
 
 import (
-	"encoding/json"
-	"net/http"
+	"context"
 
+	http_server "github.com/alexeevayaan/portfolio-react-golang-todo/api/gen/http/todo_v1/server"
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/internal/dto"
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/pkg/render"
 )
 
-func (h *Handler) CreateTodo (w http.ResponseWriter, r *http.Request){
-	ctx:= r.Context()
-
-	input:= dto.CreateTodoInput{}
-
-	err:= json.NewDecoder(r.Body).Decode(&input)
-	if err !=nil{
-		render.Error(ctx, w, err, http.StatusBadRequest, "json decode error")
-
-		return
+func (h *Handler) CreateTodo(ctx context.Context, request http_server.CreateTodoRequestObject) (http_server.CreateTodoResponseObject, error) {
+	input := dto.CreateTodoInput{
+		Title:       request.Body.Title,
+		Description: request.Body.Description,
 	}
 
 	output, err := h.usecase.CreateTodo(ctx, input)
+	if err != nil {
+		err = render.Error(ctx, err, "request failed")
 
-	if err != nil{
-		render.Error(ctx, w, err, http.StatusBadRequest, "request failed")
-		return
+		return http_server.CreateTodo400JSONResponse{
+			Error: err.Error(),
+		}, nil
 	}
 
-	render.JSON(w, output, http.StatusOK)
+	return http_server.CreateTodo200JSONResponse{
+		ID: output.ID,
+	}, nil
 }

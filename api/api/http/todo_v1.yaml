@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: API Title
-  version: 1.0.0
+  version: 1.0.3
   description: API for todos
   contact:
     name: Ayaan
@@ -47,8 +47,9 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
           description: Todo's ID  
-          example: 323e8932-e23q-54g5-g456-902346764329
+          example: 6a44a969-8a94-4e1c-9fe2-32dfe521fa90
       responses:
         200:
           description: Todo retrieved
@@ -79,8 +80,9 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
           description: Todo's ID  
-          example: 323e8932-e23q-54g5-g456-902346764329
+          example: 6a44a969-8a94-4e1c-9fe2-32dfe521fa90
       responses:
         204:
           description: Todo deleted
@@ -114,7 +116,8 @@ components:
         id: 
           type: string  
           description: ID of the created todo
-          example: 323e8932-e23q-54g5-g456-902346764329
+          example: 6a44a969-8a94-4e1c-9fe2-32dfe521fa90
+          format: uuid
     GetTodoOutput:
       type: object
       required:
@@ -128,15 +131,18 @@ components:
         id:
           type: string  
           description: ID of the created todo
-          example: 323e8932-e23q-54g5-g456-902346764329
+          example: 6a44a969-8a94-4e1c-9fe2-32dfe521fa90
+          format: uuid
         created_at:
           type: string
           description: DateTime when the todo was created
           example: 2025-10-01T00:00:00Z
+          format: date-time
         updated_at:
           type: string
           description: DateTime when the todo was updated
           example: 2025-10-01T00:00:00Z
+          format: date-time
         title:
           type: string  
           description: Title of the todo

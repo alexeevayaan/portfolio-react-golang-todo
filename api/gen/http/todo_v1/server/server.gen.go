@@ -8,10 +8,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/oapi-codegen/runtime"
 	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 // CreateTodoInput defines model for CreateTodoInput.
@@ -26,7 +28,7 @@ type CreateTodoInput struct {
 // CreateTodoOutput defines model for CreateTodoOutput.
 type CreateTodoOutput struct {
 	// ID ID of the created todo
-	ID string `json:"id"`
+	ID openapi_types.UUID `json:"id"`
 }
 
 // ErrorResponse defines model for ErrorResponse.
@@ -41,19 +43,19 @@ type GetTodoOutput struct {
 	Completed bool `json:"completed"`
 
 	// CreatedAt DateTime when the todo was created
-	CreatedAt string `json:"created_at"`
+	CreatedAt time.Time `json:"created_at"`
 
 	// Description Description of the todo
 	Description string `json:"description"`
 
 	// ID ID of the created todo
-	ID string `json:"id"`
+	ID openapi_types.UUID `json:"id"`
 
 	// Title Title of the todo
 	Title string `json:"title"`
 
 	// UpdatedAt DateTime when the todo was updated
-	UpdatedAt string `json:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // CreateTodoJSONRequestBody defines body for CreateTodo for application/json ContentType.
@@ -66,10 +68,10 @@ type ServerInterface interface {
 	CreateTodo(w http.ResponseWriter, r *http.Request)
 	// Delete a todo by ID
 	// (DELETE /todo/{id})
-	DeleteTodoByID(w http.ResponseWriter, r *http.Request, id string)
+	DeleteTodoByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID)
 	// Get a todo by ID
 	// (GET /todo/{id})
-	GetTodoByID(w http.ResponseWriter, r *http.Request, id string)
+	GetTodoByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -84,13 +86,13 @@ func (_ Unimplemented) CreateTodo(w http.ResponseWriter, r *http.Request) {
 
 // Delete a todo by ID
 // (DELETE /todo/{id})
-func (_ Unimplemented) DeleteTodoByID(w http.ResponseWriter, r *http.Request, id string) {
+func (_ Unimplemented) DeleteTodoByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Get a todo by ID
 // (GET /todo/{id})
-func (_ Unimplemented) GetTodoByID(w http.ResponseWriter, r *http.Request, id string) {
+func (_ Unimplemented) GetTodoByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -123,7 +125,7 @@ func (siw *ServerInterfaceWrapper) DeleteTodoByID(w http.ResponseWriter, r *http
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id string
+	var id openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -148,7 +150,7 @@ func (siw *ServerInterfaceWrapper) GetTodoByID(w http.ResponseWriter, r *http.Re
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id string
+	var id openapi_types.UUID
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", chi.URLParam(r, "id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
@@ -320,7 +322,7 @@ func (response CreateTodo400JSONResponse) VisitCreateTodoResponse(w http.Respons
 }
 
 type DeleteTodoByIDRequestObject struct {
-	ID string `json:"id"`
+	ID openapi_types.UUID `json:"id"`
 }
 
 type DeleteTodoByIDResponseObject interface {
@@ -345,7 +347,7 @@ func (response DeleteTodoByID400JSONResponse) VisitDeleteTodoByIDResponse(w http
 }
 
 type GetTodoByIDRequestObject struct {
-	ID string `json:"id"`
+	ID openapi_types.UUID `json:"id"`
 }
 
 type GetTodoByIDResponseObject interface {
@@ -453,7 +455,7 @@ func (sh *strictHandler) CreateTodo(w http.ResponseWriter, r *http.Request) {
 }
 
 // DeleteTodoByID operation middleware
-func (sh *strictHandler) DeleteTodoByID(w http.ResponseWriter, r *http.Request, id string) {
+func (sh *strictHandler) DeleteTodoByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID) {
 	var request DeleteTodoByIDRequestObject
 
 	request.ID = id
@@ -479,7 +481,7 @@ func (sh *strictHandler) DeleteTodoByID(w http.ResponseWriter, r *http.Request, 
 }
 
 // GetTodoByID operation middleware
-func (sh *strictHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id string) {
+func (sh *strictHandler) GetTodoByID(w http.ResponseWriter, r *http.Request, id openapi_types.UUID) {
 	var request GetTodoByIDRequestObject
 
 	request.ID = id

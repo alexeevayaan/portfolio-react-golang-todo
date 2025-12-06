@@ -1,31 +1,38 @@
 package v1
 
 import (
+	"context"
 	"errors"
-	"net/http"
 
+	http_server "github.com/alexeevayaan/portfolio-react-golang-todo/api/gen/http/todo_v1/server"
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/internal/domain"
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/internal/dto"
 	"github.com/alexeevayaan/portfolio-react-golang-todo/api/pkg/render"
-	"github.com/go-chi/chi/v5"
 )
 
-func (h *Handler) GetTodo(w http.ResponseWriter, r *http.Request) {
-	ctx := r.Context()
-
+func (h *Handler) GetTodoByID(ctx context.Context, request http_server.GetTodoByIDRequestObject) (http_server.GetTodoByIDResponseObject, error) {
 	input := dto.GetTodoInput{
-		Id: chi.URLParam(r, "id"),
+		Id: request.ID.String(),
 	}
 
 	output, err := h.usecase.GetTodo(ctx, input)
 	if err != nil {
-		ErrStatus := http.StatusBadRequest
-		if errors.Is(err, domain.ErrNotFound) {
-			ErrStatus = http.StatusNotFound
+		err = render.Error(ctx, err, "request failed")
+		switch {
+		case errors.Is(err, domain.ErrNotFound):
+			return http_server.GetTodoByID404JSONResponse{Error: err.Error()}, nil
+		default:
+			return http_server.GetTodoByID400JSONResponse{Error: err.Error()}, nil
 		}
-		render.Error(ctx, w, err, ErrStatus, "request failed")
-		return
 	}
 
-	render.JSON(w, output, http.StatusOK)
+	var todo http_server.GetTodoByID200JSONResponse
+	todo.ID = output.ID
+	todo.Title = output.Title
+	todo.Description = output.Description
+	todo.Completed = output.Completed
+	todo.CreatedAt = output.CreatedAt
+	todo.UpdatedAt = output.UpdatedAt
+
+	return todo, nil
 }

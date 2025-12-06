@@ -3,8 +3,7 @@ MIGRATE_PATH = ./api/migration/postgres
 
 
 run:
-	go run ./api/cmd/app/main.go
-# 	go run ./api/cmd/app
+	cd api && go run ./cmd/app/main.go
 
 up:
 	docker compose up --build --force-recreate

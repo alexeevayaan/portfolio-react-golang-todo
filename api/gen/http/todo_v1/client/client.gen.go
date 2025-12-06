@@ -12,8 +12,10 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/oapi-codegen/runtime"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 // CreateTodoInput defines model for CreateTodoInput.
@@ -28,7 +30,7 @@ type CreateTodoInput struct {
 // CreateTodoOutput defines model for CreateTodoOutput.
 type CreateTodoOutput struct {
 	// ID ID of the created todo
-	ID string `json:"id"`
+	ID openapi_types.UUID `json:"id"`
 }
 
 // ErrorResponse defines model for ErrorResponse.
@@ -43,19 +45,19 @@ type GetTodoOutput struct {
 	Completed bool `json:"completed"`
 
 	// CreatedAt DateTime when the todo was created
-	CreatedAt string `json:"created_at"`
+	CreatedAt time.Time `json:"created_at"`
 
 	// Description Description of the todo
 	Description string `json:"description"`
 
 	// ID ID of the created todo
-	ID string `json:"id"`
+	ID openapi_types.UUID `json:"id"`
 
 	// Title Title of the todo
 	Title string `json:"title"`
 
 	// UpdatedAt DateTime when the todo was updated
-	UpdatedAt string `json:"updated_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // CreateTodoJSONRequestBody defines body for CreateTodo for application/json ContentType.
@@ -140,10 +142,10 @@ type ClientInterface interface {
 	CreateTodo(ctx context.Context, body CreateTodoJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// DeleteTodoByID request
-	DeleteTodoByID(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	DeleteTodoByID(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetTodoByID request
-	GetTodoByID(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetTodoByID(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) CreateTodoWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -170,7 +172,7 @@ func (c *Client) CreateTodo(ctx context.Context, body CreateTodoJSONRequestBody,
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteTodoByID(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) DeleteTodoByID(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewDeleteTodoByIDRequest(c.Server, id)
 	if err != nil {
 		return nil, err
@@ -182,7 +184,7 @@ func (c *Client) DeleteTodoByID(ctx context.Context, id string, reqEditors ...Re
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetTodoByID(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) GetTodoByID(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetTodoByIDRequest(c.Server, id)
 	if err != nil {
 		return nil, err
@@ -235,7 +237,7 @@ func NewCreateTodoRequestWithBody(server string, contentType string, body io.Rea
 }
 
 // NewDeleteTodoByIDRequest generates requests for DeleteTodoByID
-func NewDeleteTodoByIDRequest(server string, id string) (*http.Request, error) {
+func NewDeleteTodoByIDRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -269,7 +271,7 @@ func NewDeleteTodoByIDRequest(server string, id string) (*http.Request, error) {
 }
 
 // NewGetTodoByIDRequest generates requests for GetTodoByID
-func NewGetTodoByIDRequest(server string, id string) (*http.Request, error) {
+func NewGetTodoByIDRequest(server string, id openapi_types.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -351,10 +353,10 @@ type ClientWithResponsesInterface interface {
 	CreateTodoWithResponse(ctx context.Context, body CreateTodoJSONRequestBody, reqEditors ...RequestEditorFn) (*CreateTodoResponse, error)
 
 	// DeleteTodoByIDWithResponse request
-	DeleteTodoByIDWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*DeleteTodoByIDResponse, error)
+	DeleteTodoByIDWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTodoByIDResponse, error)
 
 	// GetTodoByIDWithResponse request
-	GetTodoByIDWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetTodoByIDResponse, error)
+	GetTodoByIDWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTodoByIDResponse, error)
 }
 
 type CreateTodoResponse struct {
@@ -444,7 +446,7 @@ func (c *ClientWithResponses) CreateTodoWithResponse(ctx context.Context, body C
 }
 
 // DeleteTodoByIDWithResponse request returning *DeleteTodoByIDResponse
-func (c *ClientWithResponses) DeleteTodoByIDWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*DeleteTodoByIDResponse, error) {
+func (c *ClientWithResponses) DeleteTodoByIDWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*DeleteTodoByIDResponse, error) {
 	rsp, err := c.DeleteTodoByID(ctx, id, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -453,7 +455,7 @@ func (c *ClientWithResponses) DeleteTodoByIDWithResponse(ctx context.Context, id
 }
 
 // GetTodoByIDWithResponse request returning *GetTodoByIDResponse
-func (c *ClientWithResponses) GetTodoByIDWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetTodoByIDResponse, error) {
+func (c *ClientWithResponses) GetTodoByIDWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetTodoByIDResponse, error) {
 	rsp, err := c.GetTodoByID(ctx, id, reqEditors...)
 	if err != nil {
 		return nil, err
