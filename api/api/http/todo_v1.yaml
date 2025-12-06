@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: API Title
+  version: 1.0.0
+  description: API for todos
+  contact:
+    name: Ayaan
+    email: alexeevayaan@gmail.com
+servers:
+  - url: http://localhost:8080/v1
+    description: Local server
+paths:
+  /todo:
+    post:
+      tags:
+        - Todo
+      operationId: createTodo
+      summary: Create a new Todo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTodoInput'
+      responses:
+        200:
+          description: Todo created
+          content:  
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTodoOutput'
+        400:
+          description: Bad request
+          content:  
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /todo/{id}:
+    get:
+      tags:
+        - Todo
+      operationId: getTodoById  
+      summary: Get a todo by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Todo's ID  
+          example: 323e8932-e23q-54g5-g456-902346764329
+      responses:
+        200:
+          description: Todo retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetTodoOutput'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        404:
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      tags:
+        - Todo
+      operationId: deleteTodoById  
+      summary: Delete a todo by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Todo's ID  
+          example: 323e8932-e23q-54g5-g456-902346764329
+      responses:
+        204:
+          description: Todo deleted
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    CreateTodoInput:
+      type: object
+      required:
+        - title
+        - description
+      properties:
+        title:
+          type: string  
+          description: Title of the todo
+          example: Hi, i'm from Sa
+        description:
+          type: string  
+          description: Description of the todo
+          example: I'm Golang, React, React Native Developer, please i need work.
+    CreateTodoOutput:
+      type: object
+      required:
+        - id
+      properties:
+        id: 
+          type: string  
+          description: ID of the created todo
+          example: 323e8932-e23q-54g5-g456-902346764329
+    GetTodoOutput:
+      type: object
+      required:
+        - id
+        - created_at
+        - updated_at
+        - title
+        - description
+        - completed
+      properties:
+        id:
+          type: string  
+          description: ID of the created todo
+          example: 323e8932-e23q-54g5-g456-902346764329
+        created_at:
+          type: string
+          description: DateTime when the todo was created
+          example: 2025-10-01T00:00:00Z
+        updated_at:
+          type: string
+          description: DateTime when the todo was updated
+          example: 2025-10-01T00:00:00Z
+        title:
+          type: string  
+          description: Title of the todo
+          example: Hi, i'm from Sa
+        description:
+          type: string  
+          description: Description of the todo
+          example: I'm Golang, React, React Native Developer, please i need work.
+        completed:
+          type: boolean
+          description: Status of the todo
+          example: false
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          description: Error Message
+      example:
+        error:
+          error: Todo not found    
+          
