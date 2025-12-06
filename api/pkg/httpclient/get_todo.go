@@ -2,12 +2,11 @@ package httpclient
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"time"
 
+	http_client "github.com/alexeevayaan/portfolio-react-golang-todo/api/gen/http/todo_v1/client"
 	"github.com/google/uuid"
 )
 
@@ -21,41 +20,19 @@ type Todo struct {
 	Completed   bool      `json:"completed"`
 }
 
-func (c *Client) Get(ctx context.Context, id string) (Todo, error) {
-	const getTodo = "v1/todo"
-
-	path := fmt.Sprintf("http://%s/%s/%s", c.host, getTodo, id)
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, path, http.NoBody)
+func (c *Client) Get(ctx context.Context, id string) (*http_client.GetTodoOutput, error) {
+	output, err := c.client.GetTodoByIDWithResponse(ctx, uuid.MustParse(id))
 	if err != nil {
-		return Todo{}, fmt.Errorf("http.NewRequestWithContext: %w", err)
+		return nil, fmt.Errorf("GetTodoByIDWithResponse: %w", err)
 	}
 
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return Todo{}, fmt.Errorf("client.Do: %w", err)
+	if output.StatusCode() == http.StatusNotFound {
+		return nil, ErrNotFound
 	}
 
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return Todo{}, fmt.Errorf("io.ReadAll: %w", err)
+	if output.StatusCode() != http.StatusOK {
+		return nil, fmt.Errorf("request failed: status: %s, body:%s", output.Status(), output.Body)
 	}
 
-	if resp.StatusCode == http.StatusNotFound {
-		return Todo{}, ErrNotFound
-	}
-
-	if resp.StatusCode != http.StatusOK {
-		return Todo{}, fmt.Errorf("request failed with status: %s, body: %s", resp.Status, body)
-	}
-
-	var todo Todo
-
-	if err = json.Unmarshal(body, &todo); err != nil {
-		return Todo{}, fmt.Errorf("json.Unmarshal: %w", err)
-	}
-
-	return todo, nil
+	return output.JSON200, nil
 }

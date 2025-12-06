@@ -1,57 +1,29 @@
 package httpclient
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 
+	http_client "github.com/alexeevayaan/portfolio-react-golang-todo/api/gen/http/todo_v1/client"
 	"github.com/google/uuid"
 )
 
 func (c *Client) Create(ctx context.Context, title string, description string) (uuid.UUID, error) {
-	const createTodo = "v1/todo"
-
-	path := fmt.Sprintf("http://%s/%s", c.host, createTodo)
-
-	request := struct {
-		Title       string `json:"title"`
-		Description string `json:"description"`
-	}{
+	input := http_client.CreateTodoInput{
 		Title:       title,
 		Description: description,
 	}
-	body, err := json.Marshal(request)
+
+	output, err := c.client.CreateTodoWithResponse(ctx, input)
 	if err != nil {
-		return uuid.Nil, fmt.Errorf("json.Marshal: %w", err)
+		return uuid.Nil, fmt.Errorf("create todo: %w", err)
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, path, bytes.NewReader(body))
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("http.NewRequestWithContext: %w", err)
+	if output.StatusCode() != http.StatusOK {
+		return uuid.Nil, fmt.Errorf("create todo: %w", errors.New(output.JSON400.Error))
 	}
 
-	req.Header.Set("Content-Type", "application/json")
-
-	resp, err := c.client.Do(req)
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("client.Do: %w", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		return uuid.Nil, fmt.Errorf("request failed with status: %s, body: %s", resp.Status, body)
-	}
-
-	response := struct {
-		ID uuid.UUID `json:"id"`
-	}{}
-
-	err = json.NewDecoder(resp.Body).Decode(&response)
-	if err != nil {
-		return uuid.Nil, fmt.Errorf("json.Decoder: %w", err)
-	}
-
-	return response.ID, nil
+	return output.JSON200.ID, nil
 }

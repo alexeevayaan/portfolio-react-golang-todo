@@ -6,7 +6,10 @@ import (
 )
 
 func Example() {
-	todo := New(Config{Host: "localhost", Port: "8080"})
+	todo, err := New(Config{Host: "localhost", Port: "8080"})
+	if err != nil {
+		panic(err)
+	}
 
 	ctx := context.Background()
 

@@ -2,9 +2,9 @@ package httpclient
 
 import (
 	"errors"
-	"net"
-	"net/http"
-	"time"
+	"fmt"
+
+	http_client "github.com/alexeevayaan/portfolio-react-golang-todo/api/gen/http/todo_v1/client"
 )
 
 var ErrNotFound = errors.New("not found")
@@ -15,15 +15,17 @@ type Config struct {
 }
 
 type Client struct {
-	client http.Client
-	host   string
+	client *http_client.ClientWithResponses
 }
 
-func New(c Config) *Client {
-	return &Client{
-		client: http.Client{
-			Timeout: 5 * time.Second,
-		},
-		host: net.JoinHostPort(c.Host, c.Port),
+func New(c Config) (*Client, error) {
+	baseUrl := fmt.Sprintf("http://%s:%s/v1", c.Host, c.Port)
+
+	client, err := http_client.NewClientWithResponses(baseUrl)
+	if err != nil {
+		return nil, fmt.Errorf("http_client.NewClientWithResponses: %w", err)
 	}
+	return &Client{
+		client: client,
+	}, nil
 }

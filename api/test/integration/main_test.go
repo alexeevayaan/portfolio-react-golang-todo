@@ -68,10 +68,12 @@ func (s *Suite) SetupSuite() {
 		s.NoError(err)
 	}()
 
-	s.todo = httpclient.New(httpclient.Config{
+	var err error
+	s.todo, err = httpclient.New(httpclient.Config{
 		Host: "localhost",
 		Port: "8080",
 	})
+	s.NoError(err)
 
 	time.Sleep(1 * time.Second)
 }
